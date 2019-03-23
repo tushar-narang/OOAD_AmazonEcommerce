@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+<title>Amazon OOAD Project</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: owl carousel  -->
+<link href="plugins/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="plugins/owlcarousel/assets/owl.theme.default.css" rel="stylesheet">
+
+<script src="plugins/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+<link href="css/custom.css" rel="stylesheet"  />
+
+<!-- custom javascript -->
+<script src="js/script.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	var userid = JSON.parse(localStorage.getItem("userdata")).id;
+
+	var api = "http://localhost:8055/amazon.com/webapi/UserController/checkSellerDetails/"+userid;
+	var product;
+
+	//Ajax Call for getting individual product
+	$.get(api , function(data, status){
+	    if(data != 0) {
+	    	
+		    	$('#register').hide();
+		    	alert("You already have uploaded your user details :) !!");
+	    } 
+	});
+	
+	
+	
+	
+    console.log(userid);
+    $("#registerbutton").click(function(event){
+    	
+    	//alert("Call success");
+    	console.log($("#companyname").val());
+    	var obj = {
+    			userid		: userid,
+    			companyname	: $("#companyname").val(),
+    			gstin		: $("#gstin").val(),
+    			pan 		: $("#pan").val(),
+    			contactno	: $("#contactno").val(),
+    			cardno		: $('#cardno :selected').text(),
+    			cvv			: $("#cvv").val()
+    	};
+
+    	var form = $('#register')[0];
+    	data = new FormData(form);
+		data.append('userid',userid);
+    	  $.ajax({
+		    	type: "POST",
+				enctype: 'multipart/form-data',
+		        url: "http://localhost:8055/amazon.com/webapi/UserController/saveSeller",
+		        data: data, 
+		       	processData: false,
+		        contentType: false,
+		        cache: false,
+		        async: true,
+		        timeout: 600000,
+		        
+		        success: function(data){
+		        	//alert("hi");
+		        	window.alert(data);
+		        	if(data == "Success")
+		        		window.location.href="http://localhost:8055/amazon.com/addprd.html";
+		        				        	//location.reload(true);
+		        },
+		        error : function(jqXHR, textStatus, errorThrown) {
+		        	alert(jqXHR + textStatus +errorThrown);
+					$("#messages").append("<li style='color: red;'>" + textStatus + " apa "+ errorThrown.responseText + "</li>");
+				}
+		    });
+    	
+		});
+    
+    var api;
+    api = "http://localhost:8055/amazon.com/webapi/CardController/getCards/" + userid;
+    $.get(api , function(data, status){
+        var myString="";
+        //myString = myString + "<select onchange = 'subcat(this)'> <option>-Default-</option>";
+    		
+        for(var i = 0; i < data.length; i++)
+    	{
+        	 //myString = myString + "<a href='#'><p onclick = \"subcat('" +data[i].categoryname+"');\">"+data[i].categoryname +" </a></p> ";
+        	 //myString = myString + "<a href='#' onclick = \"subcat('" +data[i].categoryname+"');\">"+data[i].categoryname +" </a>";
+        	 myString=myString+"<option value = '"+ data[i].cardno +"'>"+ data[i].cardno +"</option>";
+    	}
+        //myString = myString + "</select>"
+        //alert(""+myString);
+        
+        $('#cardno').html(myString);
+    		});
+ });
+//jquery end
+</script>
+
+
+</head>
+<body>
+<header class="section-header background-amazon">
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container row">
+	<!-- Amazon Logo -->
+	<div class="col-md-3">
+  	<a class="navbar-brand" href="home.jsp"><img class="logo" src="images/logos/amazon.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+    <a href="#"  data-toggle="popover" data-trigger="hover" data-title="Unlimited FREE fast delivery, videos, music & more" data-content="Prime members enjoy unlimited free, fast delivery on eligible product items, video streaming, exclusive access to deals and more." style="position:relative; left:-50px;top:10px;"><small>Try Prime</small></a>
+	</div>
+	<!-- Amazon Logo End -->
+	
+	<!-- Search Bar -->
+    <div class="col-md-5" id="navbarTop">
+		<form action="#" class="py-1">
+				<div class="input-group w-100">
+					<select class="custom-select"  name="category_name">
+						<option value="">All type</option>
+						<option value="">Special</option>
+						<option value="">Only best</option>
+						<option value="">Latest</option>
+					</select>
+				    <input type="text" class="form-control" style="width:50%;" placeholder="Search">
+				    <div class="input-group-append">
+				      <button class="btn btn-warning" type="submit">
+				        <i class="fa fa-search"></i> Search 
+				      </button>
+				    </div>
+			    </div>
+		</form>
+    </div>
+	<!-- Search Bar End -->
+	
+	<!-- Small Ad -->
+	<div class="col-md-4">
+		<span class="pull-right"><img src="images/banners/nav_top_ad.jpg"/></span>
+	</div>
+	<!-- Small Ad End -->
+  </div>
+</nav>
+
+<section class="header-main shadow-sm">
+<div class="container">
+<div class="row-sm align-items-center">
+	
+	
+	<!-- Nav Bar Category & Address -->
+	<div class="col-lg-7-24 col-sm-3">
+	<div class="row">
+		<div class="col-sm-6"><i class="fas fa-map-marker-alt"></i>
+			<small>Deliver To Tushar</small></br>
+			<b>Bengaluru 560010</b>
+		</div>
+		<div class="col-sm-5 category-wrap dropdown py-1">
+		<button type="button" class="btn background-amazon  dropdown-toggle" data-toggle="dropdown" ><b> Shop By Categories</b></button>
+		<div class="dropdown-menu">
+			<a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
+			<a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
+			<a class="dropdown-item" href="#">Auto / Transportation</a>
+			<a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
+			<a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
+			<a class="dropdown-item" href="#">Beauty & Personal Care / Health </a> 
+		</div>
+	</div>
+	</div>
+	 
+	</div>
+	<!-- Nav Bar Category End -->
+	<div class="col-lg-10-24 col-sm-8 small text-light">
+		<a class="text-light" href="#">Buy Again</a> <a  class="text-light" href="#">Tushar's Amazon</a> <a  class="text-light" href="#">Today's Deals</a> <a class="text-light" href="#">Amazon Pay</a> <a class="text-light" href="#">Sell</a> <a class="text-light" href="#">Customer Service</a>	 <!-- search-wrap .end// -->
+	</div> <!-- col.// -->
+	<div class="col-lg-7-24 col-sm-12">
+		<div class="widgets-wrap float-right row no-gutters py-1">
+			<div class="col-auto">
+			<div class="widget-header dropdown">
+				<a href="#" data-toggle="dropdown" data-offset="20,10">
+					<div class="icontext">
+						
+						<div class="text-wrap text-light">
+							<small>Hello, Tushar<br/><b> Your Orders</b>
+							<i class="fa fa-caret-down"></i> </small>	
+						</div>
+					</div>
+				</a>
+				<div class="dropdown-menu" style="width:200px; padding-bottom: 0px;">
+				<ul style="padding:5px;">
+					<li class="list-manager"><div class="form-group" ><a href="login.html"><button type="submit" class="btn btn-warning btn-block"> Sign In  </button></a></div></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/css/homepage.html/ref=nav_youraccount_ya">Your Account</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/css/order-history/ref=nav_youraccount_orders">Your Order</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/registry/wishlist/ref=nav_youraccount_wl?ie=UTF8&requiresSignIn=1">Your Wishlist</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/yourstore/ref=nav_youraccount_recs">Your Recommendations</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/primecentral/ref=nav_youraccount_prime">Your Prime Membership</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/b/ref=nav_youraccount_dvm_crs_gat_in_tn_yraccount?_encoding=UTF8&node=10882806031">Your Prime Video</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/subscribe-and-save/manage/ref=nav_youraccount_sns">Your Subscribe & save items</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/business?_encoding=UTF8&node=11476704031&ref_=nav_ya_flyout_b2b_reg">Your Amazon Business Account</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/p2p/ref=nav_youraccount_sell">Your Seller Account</a></li>
+					<li class="list-manager"><a href="https://www.amazon.in/gp/digital/fiona/manage/ref=nav_youraccount_myk">Manage your content and devices</a></li>
+
+
+				</ul>
+			</div>  <!-- widget-header .// -->
+			</div> <!-- col.// -->
+			
+			<a href="prime.html" class="widget-header">
+					<div class="icontext">	
+						<div class="text-wrap text-light">
+						<small>
+							Try <br/><b>Prime</b> <i class="fa fa-caret-down"></i> 
+						</small>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-auto">
+			<a href="wishlist.html" class="widget-header">
+					<div class="icontext">	
+					
+						<div class="text-wrap text-light">
+						<small>	Your <br/><b>Lists</b> <i class="fa fa-caret-down"></i> </small>	
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-auto">
+				<a href="check_out.html" class="widget-header">
+					<div class="icontext">
+												<div class="icon-wrap"><i class="text-light icon-sm  fa fa-shopping-cart"></i></div>
+						<span class="small round badge badge-secondary">0</span>
+
+						<div class="text-wrap text-light">						
+						<small>						
+						Cart </small>
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+			 <!-- col.// -->
+		</div> <!-- widgets-wrap.// row.// -->
+	</div> <!-- col.// -->
+</div> <!-- row.// -->
+	</div> <!-- container.// -->
+</section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+<!-- ========================= SECTION MAIN ========================= -->
+<section class="section-main bg padding-y-sm">
+<div class="container">
+<div id="code_register_2">
+<div class="card">
+<article class="card-body col-md-4 offset-md-4" >
+	<h4 class="card-title mt-3 text-center">Register Seller</h4>
+	
+	<form method="post" id="register">
+	
+	<div class="form-group input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+		 </div>
+        <input name="companyname" class="form-control" placeholder="Company Name" type="text" id="companyname">
+    </div> <!-- form-group// -->
+    <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+		 </div>
+        <input name="gstin" class="form-control" placeholder="GST Number" type="text" id="gstin">
+    </div> <!-- form-group// -->
+    <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+		 </div>
+        <input name="pan" class="form-control" placeholder="PAN Number" type="text" id="pan">
+    </div> <!-- form-group// -->
+
+    	<div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+		 </div>
+        <input name="contactno" class="form-control" placeholder="Contact Number" type="number" id="contactno">
+    </div> <!-- form-group// -->
+    <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+		</div>
+        <select class="form-control" name="cardno" id="cardno">
+        	<option>Test</option>
+        </select>
+    </div> <!-- form-group// -->
+    <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+		</div>
+        <input name="cvv" class="form-control" placeholder="CVV" type="text" id="cvv">
+    </div> <!-- form-group// -->                                      
+    <div class="form-group">
+        <button type="button" class="btn btn-warning btn-block" id ="registerbutton"> Register </button>
+    </div> <!-- form-group// -->                                                                    
+</form>
+</article>
+</div> <!-- card.// -->
+</div><!-- card.// -->
+
+
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="section-footer background-amazon">
+	<div class="container">
+		<section class="footer-top padding-top">
+			<div class="row">
+				<aside class="col-sm-3"></aside>
+				<aside class="col-sm-3  col-md-3 white">
+					<h5 class="title">My Account</h5>
+					<ul class="list-unstyled">
+						<li> <a href="#"> User Login </a></li>
+						<li> <a href="#"> User register </a></li>
+						<li> <a href="#"> Account Setting </a></li>
+						<li> <a href="#"> My Orders </a></li>
+						<li> <a href="#"> My Wishlist </a></li>
+					</ul>
+				</aside>
+				
+				<aside class="col-sm-3">
+					<article class="white">
+						<h5 class="title">Contacts</h5>
+						<p>
+							<strong>Phone: </strong> +123456789 <br> 
+						    <strong>Fax:</strong> +123456789
+						</p>
+
+						 <div class="btn-group white">
+						    <a class="btn btn-facebook" title="Facebook" target="_blank" href="#"><i class="fab fa-facebook-f  fa-fw"></i></a>
+						    <a class="btn btn-instagram" title="Instagram" target="_blank" href="#"><i class="fab fa-instagram  fa-fw"></i></a>
+						    <a class="btn btn-youtube" title="Youtube" target="_blank" href="#"><i class="fab fa-youtube  fa-fw"></i></a>
+						    <a class="btn btn-twitter" title="Twitter" target="_blank" href="#"><i class="fab fa-twitter  fa-fw"></i></a>
+						</div>
+					</article>
+				</aside>
+			</div> <!-- row.// -->
+			<br> 
+		</section>
+		
+	</div><!-- //container -->
+</footer>
+<!-- ========================= FOOTER END // ========================= -->
+
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+<title>Amazon OOAD Project</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: owl carousel  -->
+<link href="plugins/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="plugins/owlcarousel/assets/owl.theme.default.css" rel="stylesheet">
+
+<script src="plugins/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+<link href="css/custom.css" rel="stylesheet"  />
+
+
+<script>
+
+$(document).ready(function() {
+
+	var globaldiscountedprice =0;
+	$("#showlater").hide();
+var api;
+api = "http://localhost:8055/amazon.com/webapi/ProductController/products";
+
+
+$.get(api , function(data, status){
+
+    var myString="";
+   myString = myString + "<option selected='default'> Select Product</option>";
+		
+    for(var i = 0; i < data.length; i++)
+	{
+    	 //myString = myString + "<a href='#'><p onclick = \"subcat('" +data[i].categoryname+"');\">"+data[i].categoryname +" </a></p> ";
+    	 //myString = myString + "<a href='#' onclick = \"subcat('" +data[i].categoryname+"');\">"+data[i].categoryname +" </a>";
+    	 myString=myString+"<option value = '"+ data[i].id +"'>"+ data[i].productname +"</option>";
+	}
+   
+    //alert(""+myString);
+    
+    $('#products').html(myString);
+   // $('#addsupid').text(0);
+
+		});
+		
+		});	
+
+function changeproductbdaysettings(id)
+{
+
+	$("#showlater").show();
+	var api;
+	api = "http://localhost:8055/amazon.com/webapi/ProductController/productsById/"+id;
+
+
+	$.get(api , function(data, status){
+		document.getElementById("bdayspprice").value =  data[0].bdayprice;
+		document.getElementById("bdayspdiscount").value = ((data[0].discountedprice - data[0].bdayprice)/data[0].discountedprice) * 100;
+		globaldiscountedprice = data[0].discountedprice;
+		if(data[0].is_bdayproduct){
+			//alert("kya bey chakke");
+			document.getElementById("isbdayavil").value =1; 
+		}
+		else{
+			document.getElementById("isbdayavil").value =0; 
+		}
+			});
+	
+	//alert("hello");
+};
+
+function updateProduct() {
+	var form = $('#updateproductform')[0];
+    var data = new FormData(form);
+
+    $.ajax({
+    	type: "POST",
+		enctype: 'multipart/form-data',
+        url: "http://localhost:8055/amazon.com/webapi/ProductController/updateproduct/"+$('#products').val(),
+        data: data, 
+       	processData: false,
+        contentType: false,
+        cache: false,
+        async: true,
+        timeout: 600000,
+        
+        success:function(result){
+        	window.alert(result);
+        	//window.location.href="http://localhost:8055/amazon.com/";
+        	//location.reload(true);
+        }
+    });
+}
+
+function updatediscfield(price){
+	//var disc = document.getElementById("bdayspdiscount").value;
+	console.log(price + "-" + globaldiscountedprice);
+	document.getElementById("bdayspdiscount").value = ((globaldiscountedprice -price)/globaldiscountedprice) * 100;
+	
+}
+
+function updatepricefield(disc){
+	var price = document.getElementById("bdayspprice").value;
+	console.log(price + "+" + disc);
+	document.getElementById("bdayspprice").value = globaldiscountedprice - ((disc*globaldiscountedprice)/100);
+	
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"> </script>
+<script src="js/admin_layout.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="admin_header_container">
+</div>
+<!--  --------------------------------------------main    body------------------------------------------------------------   -->
+ <section class="section-main bg padding-y-sm">
+<div class="card">
+  <div class="card-body" >
+  <h4 class="card-title mt-3 text-center">Update bday settings for product</h4>
+  	<h5 class="card-title" id="bdayprod"></h5>
+</div> <!-- card.// -->
+<div class="input-group-append">
+				    </div>
+ <!-- container .//  -->
+</section>
+ 
+  <section class="section-main bg padding-y-sm">
+<div class="card">
+  <div class="card-body" >
+<form id="updateproductform" name="updateproductform">
+
+<select id="products" name="products" class="form-control" onChange="changeproductbdaysettings(this.value);">
+			<option selected="default"> Select Product</option>
+			
+</select>
+
+<br><br>
+<div id="showlater" class="">
+Set for Birthday Offer: 
+<select id="isbdayavil" name="isbdayavil" class="form-control">
+			
+			<option value=0>No</option>
+			<option value=1>Yes</option>
+
+</select>	
+<br>
+Birthday Special Price:<br>	
+<input type="text" name="bdayspprice" id="bdayspprice" onchange="updatediscfield(this.value)" >
+<br>--OR--<br>
+Birthday Discount:<br>	
+<input type="text" name="bdayspdiscount" id="bdayspdiscount" onchange="updatepricefield(this.value)" >
+<br><br>
+<button type="button" name="Update Product" class="btn btn-warning btn-block" id ="updateproduct" onclick="updateProduct();"> Update Product </button>
+
+</div>
+</form>
+</div> <!-- card.// -->
+</div>				   
+ <!-- container .//  -->
+</section>
+
+ <!--  ---------------------------------------------main    body  end---------------------------------------------------------  -->
+ 
+
+
+<div id="admin_footer_container">
+
+</div>
+<!-- ========================= FOOTER END // ========================= -->
+
+<script src="scripts/default.js" type="text/javascript"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="`-ecommerce by Vosidiy">
+
+<title>Amazon OOAD Project</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: owl carousel  -->
+<link href="plugins/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="plugins/owlcarousel/assets/owl.theme.default.css" rel="stylesheet">
+
+<script src="plugins/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+<link href="css/custom.css" rel="stylesheet"  />
+
+
+
+
+<script src="scripts/default.js" type="text/javascript"></script>
+
+
+
+
+
+
+<!-- jQuery -->
+
+<!-- Data Table -->
+		<script src="js/jquery.dataTables.js" type="text/javascript"></script>
+		<link type="text/css" rel="stylesheet" href="css/jquery.dataTables.css">
+<script type="text/javascript">
+$(document).ready(function() {
+    $(document).ready(function(){
+    	
+    	//alert("Call success");
+    	
+    	/*var obj = {
+    			fullname	: $("#fullname").val(),
+    			email 		: $("#email").val(),
+    			phonenumber	: $("#phonenumber").val(),
+    			password1	: $("#password1").val(),
+    			dob 		: $('#dob').val().toString()
+    	};
+    	*/
+    	
+    	
+		var i =0;
+    	
+    	var userId = localStorage.getItem("admin_seller_id");
+    	var api = "http://localhost:8055/amazon.com/webapi/AdminController/displayprodseller/"+userId;
+    	/*
+    	$.get(api , function(data, status){
+			data.forEach(function(item){
+				
+					$('#prod_sellerList').append("<tr><td>"+item.productlist[i].id+"</td><td>"+item.productlist[i].productname+"</td><td>"+item.productlist[i].price+"</td><td>"+item.productlist[i].discountedprice+"</td><td>"+item.productlist[i].quantityleft+"</td><td>"+item.productlist[i].description+"</td><td>"+item.productlist[i].category.super_cat.categoryname+"</td><td>"+item.productlist[i].category.categoryname+"</td><td><img src="+item.productlist[i].product_images[0].url+" style= 'width:100px;height:100px;'></td></tr>")
+					
+				i=i+1;				    		
+			});		
+		});*/
+		
+    	$.get(api , function(data, status){
+			data.forEach(function(item){
+				item.productlist.forEach(function(prod){
+					$('#prod_sellerList').append("<tr><td>"+prod.id+"</td><td>"+prod.productname+"</td><td>"+prod.price+"</td><td>"+prod.discountedprice+"</td><td>"+prod.quantityleft+"</td><td>"+prod.description+"</td><td>"+prod.category.categoryname+"</td><td><img src="+prod.product_images[0].url+" style= 'width:100px;height:100px;'></td></tr>")
+				});
+					
+					
+					    		
+			});		
+		});
+ });
+});
+</script>
+
+<!--  <script src="js/admin_layout.js" type="text/javascript"></script>  -->
+</head>
+<body>
+<div id="admin_header_container">
+</div>
+<!--  --------------------------------------------main    body------------------------------------------------------------   -->
+ <section class="section-main bg padding-y-sm">
+<div class="card">
+  <div class="card-body" >
+  <h4 class="card-title mt-3 text-center">Products Seller Table</h4>
+  
+  <table id="prod_sellertable" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Discounted Price</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Category name</th>
+                
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody id="prod_sellerList">
+        	
+        </tbody>
+  </table>
+  	
+  	    
+    
+</section>
+
+ <!--  ---------------------------------------------main    body  end---------------------------------------------------------  -->
+ 
+
+
+<div id="admin_footer_container">
+
+</div>
+<!-- ========================= FOOTER END // ========================= -->
+
+
+</body>
+
+</html>

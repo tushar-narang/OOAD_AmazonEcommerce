@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/amz</property>
+        <property name="hibernate.connection.username">amazonadmin</property>
+        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.pool_size">100</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<property name="hbm2ddl.auto">update</property>
+
+        <mapping class="ooad.amazon.com.bean.User" />
+        <mapping class="ooad.amazon.com.bean.Customer" />
+        <mapping class="ooad.amazon.com.bean.Seller" />
+        <mapping class="ooad.amazon.com.bean.Product" />
+        <mapping class="ooad.amazon.com.bean.Order" />
+        <mapping class="ooad.amazon.com.bean.ProductImages" />
+    	<mapping class="ooad.amazon.com.bean.Advertisment" />
+    	<mapping class="ooad.amazon.com.bean.ProdReview" />
+    	<mapping class="ooad.amazon.com.bean.Category" />
+    	<mapping class="ooad.amazon.com.bean.Admin" />
+    	<mapping class="ooad.amazon.com.bean.Bank" />
+    	<mapping class="ooad.amazon.com.bean.Card" />
+    	<mapping class="ooad.amazon.com.bean.Label" />
+    	<mapping class="ooad.amazon.com.bean.Address" />
+    	
+    </session-factory>
+</hibernate-configuration>

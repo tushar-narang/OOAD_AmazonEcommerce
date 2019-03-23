@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+<title>Amazon OOAD Project</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: owl carousel  -->
+<link href="plugins/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="plugins/owlcarousel/assets/owl.theme.default.css" rel="stylesheet">
+
+<script src="plugins/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+<link href="css/custom.css" rel="stylesheet"  />
+
+<!-- custom javascript -->
+<script src="js/script.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+function login() {
+	var form = $('#loginform')[0];
+	
+	var data = new FormData(form);
+	
+	$.ajax({
+		type: 'POST', // GET
+		url:"http://localhost:8055/amazon.com/webapi/AdminController/checkLogin",
+		enctype:'multipart/form-data',
+		processData:false,
+		contentType:false,
+		cache:false,
+		timeout:600000,
+		data: data,
+		dataType: 'json',
+		success: function(data){
+			console.log("data is : "+data);
+			localStorage.setItem("userdata", JSON.stringify(data[0]));
+			console.log('bhavd');
+			console.log(JSON.parse(localStorage.getItem("userdata")));
+			console.log(data[0]);
+			window.location.href = "http://localhost:8055/amazon.com/admin_menu.html";
+			
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('Username or Password is incorrect');
+        }
+		});
+	
+}
+	
+	
+</script>
+
+</head>
+<body>
+
+<!-- ========================= SECTION MAIN ========================= -->
+<section class="section-main bg padding-y-sm">
+<div class="container">
+<div id="code_register_2">
+<div class="card">
+<article class="card-body col-md-4 offset-md-4" >
+	<h4 class="card-title mt-3 text-center">Admin Login</h4>
+	<p class="text-center"></p>
+	
+	<form id="loginform">
+	<div class="form-group input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+		 </div>
+        <input name="email" class="form-control" placeholder=" Admin User Name" type="text" id="email">
+    </div> <!-- form-group// -->
+   <div class="form-group input-group">
+    	<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+		</div>
+        <input name="password1" class="form-control" placeholder="Enter password" type="password" id="password1">
+    </div> <!-- form-group// -->
+    <div class="form-group">
+        <button class="btn btn-warning btn-block" type="button" id ="registerbutton" onclick="login();"> Login </button>
+    </div> <!-- form-group// -->      
+                                                                     
+</form>
+</article>
+</div> <!-- card.// -->
+</div><!-- card.// -->
+
+
+
+<!-- ========================= FOOTER ========================= -->
+<!-- ========================= FOOTER END // ========================= -->
+
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+
+
+$(document).ready(function() {
+
+   var udata = JSON.parse(localStorage.getItem("userdata"));
+
+	//Get items of the Customer
+	var api = "http://localhost:8055/amazon.com/webapi/UserController/getUserCart/"+udata.id;
+		
+		
+	$.get(api , function(data, status){
+	//    data = JSON.parse(data);
+		console.log(data);
+		console.log("sorted till this nnj point manp");
+
+		data.forEach(function(cartitem){
+			console.log(cartitem.product);
+			productInfo = cartitem.product;
+			console.log(productInfo);
+			qty = cartitem.quantity;
+			
+			
+			var udata = JSON.parse(localStorage.getItem("userdata"));
+		    var responsebirthdate = new Date(udata.dob);
+			var currentdate = new Date();
+			var discountedprice;
+			if(productInfo.offerType == "discount" && Date.now() < productInfo.offerEndDate) {
+				discountedprice = productInfo.discountedprice * (100 - productInfo.offerdiscpercent)/100;
+			}
+			else if(productInfo.offerType == "birthday" && currentdate.getMonth() == responsebirthdate.getMonth() &&  currentdate.getDate() == responsebirthdate.getDate() ){
+				discountedprice = productInfo.discountedprice * (100 - productInfo.offerdiscpercent)/100;
+				
+			}else if(productInfo.offerType == "buy1get1"  && Date.now() < productInfo.offerEndDate ){
+				discountedprice = productInfo.discountedprice;
+				
+			}else{
+				alert("Comes here ");
+				discountedprice = productInfo.discountedprice;
+			}
+			
+			
+			
+			var Template = "";    
+					    Template = Template + "<tr><td><figure class='media'>	<div class='img-wrap'><img src='"+productInfo.product_images[0].url+"' class='img-thumbnail img-sm'></div>";
+					    Template = Template +"<figcaption class='media-body'><h6 class='title text-truncate'>"+productInfo.productname+" </h6>";
+					    Template = Template + "</figcaption></figure></td><td><div class='price-wrap'><var class='price'>INR "+discountedprice * qty+"</var>"; 
+					    Template = Template + "<small class='text-muted'>(INR"+discountedprice+" each)</small>";
+					   // Template = Template + "</div></td><td><div class='price-wrap'><var class='price'>"+qty+"</var></div>";
+					    
+					    if(productInfo.offerType == "buy1get1"  && Date.now() < productInfo.offerEndDate )
+					    	Template = Template + "</div></td><td><div class='price-wrap'><var class='price'>"+qty+"+" + qty +"(Free)</var></div>";
+						else
+							Template = Template + "</div></td><td><div class='price-wrap'><var class='price'>"+qty+"</var></div>";
+					    
+					    Template = Template + "</td><td class='text-right'><form method='post'><div class='btn-group btn btn-success' role='group' onclick=\"removeitemfromcart('"+productInfo.id+"');\" >Remove </div>";
+					    Template = Template + "</form></td></tr>";
+					    
+					    $('#cart').append(Template);
+
+		});
+	   	   // $('#product_hidden').html("<input type='hidden' name='product_id' value='"+localStorage.getItem("viewingProduct")+"' id='product_id' />");
+	});
+	
+
+});
+function removeitemfromcart(productid) {
+	var udata = JSON.parse(localStorage.getItem("userdata"));
+	uid = udata.id;
+	
+	var form = new FormData();
+	form.append('orderid', orderid);
+	var data = form;
+	//Ajax Call for getting individual product
+	
+	$.ajax({
+    	type: "POST",
+		enctype: 'multipart/form-data',
+        url: "http://localhost:8055/amazon.com/webapi/OrderController/setDelivered/"+productid,
+        data: form, 
+       	processData: false,
+        contentType: false,
+        cache: false,
+        async: true,
+        timeout: 600000,
+        
+        success:function(result){
+        	//window.alert(result);
+        	localStorage.setItem("viewingProduct", productid);
+        	//window.location.href="http://localhost:8055/amazon.com/";
+        	alert("Successfully received!!!");
+        	window.location.href = "leave_review.html";
+        },
+        error: function(data){
+            alert("fail");
+        }
+    });
+	
+}
