@@ -48,6 +48,21 @@ public class ProductDAO {
 		return prodlist;
 	}
 	
+	public static List<Product> getProductByOffer(String offername) {
+		Session ses = CommonSessionFactory.sf.openSession();
+		
+		List<Product> prodlist = ses.createNativeQuery("select * from Product where offerType = '" + offername + "'" , Product.class).list();
+		for(Product p: prodlist)
+		{Hibernate.initialize(p.getProduct_images());
+		Hibernate.initialize(p.getCategory());
+		Hibernate.initialize(p.getProduct_reviews());
+		Hibernate.initialize(p.getLabels());
+		System.out.println(p.toString());
+		}
+		ses.close();
+		return prodlist;
+	}
+	
 	
 	public static List<Product> getProductsbyId(int id) {
 		Session ses = CommonSessionFactory.sf.openSession();

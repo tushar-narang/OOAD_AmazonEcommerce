@@ -64,6 +64,19 @@ public class ProductController {
 		 return Response.ok(products).build();
 	    }
 	 
+	 
+	 @Path("/productsByOffer/{offername}")
+	 @GET
+	 @Produces(MediaType.APPLICATION_JSON)
+	    public Response getProductByOffer(@PathParam("offername") String offername) {
+
+		 GenericEntity<List<Product>> products;
+	
+		 products  = new GenericEntity<List<Product>>(ProductDAO.getProductByOffer(offername)) { };
+		 return Response.ok(products).build();
+	    }
+	 
+	 
 	 @Path("/productsBysellerId/{sellerid}")
 	 @GET
 	 @Produces(MediaType.APPLICATION_JSON)
@@ -321,6 +334,100 @@ public class ProductController {
 			 }
 			
 		}
+	 
+	 
+	 @POST 
+		@Path("/addproductinwishlist/{productid}/{customerid}")
+		@Consumes(MediaType.MULTIPART_FORM_DATA)
+		public Response addproductinwishlist(
+				@PathParam("productid") int productid,
+				@PathParam("customerid") int customerid){
+		 
+		 	Product prod = ProductDAO.getProductsbyId(productid).get(0);
+		 	
+			System.out.println("hi manpreet the product is : "+prod);
+			
+		 	
+			System.out.println("issue start point ");
+			
+		 	Customer cust = CustomerDAO.getcustomerbyid(customerid);
+		 	
+		 	
+		 	System.out.println("no issue till this point");
+		 	
+		    
+		 	int resp = CustomerDAO.addprodtocustomerwishlist (cust,prod);
+		    
+			 if(resp >0)
+			 {
+				 String result = resp+"";
+				 return Response.status(201).entity(result).build();
+			 }
+			 else
+			 {
+				 String result = resp+"";
+				 return Response.status(404).entity(result).build();
+			 }
+			
+		}
+	 
+
+	 @POST 
+		@Path("/removeproductfromcart/{productid}/{customerid}")
+		@Consumes(MediaType.MULTIPART_FORM_DATA)
+		public Response addproductincart(
+				@PathParam("productid") int productid,
+				@PathParam("customerid") int customerid){
+		 
+		 	Product prod = ProductDAO.getProductsbyId(productid).get(0);
+		 
+			
+		 	Customer cust = CustomerDAO.getcustomerbyid(customerid);
+		 	
+		    
+		 	int resp = CustomerDAO.removeprodfromcustomercart(cust,productid);
+			 if(resp >0)
+			 {
+				 String result = resp+"";
+				 return Response.status(201).entity(result).build();
+			 }
+			 else
+			 {
+				 String result = resp+"";
+				 return Response.status(404).entity(result).build();
+			 }
+			
+		}
+	 
+	 
+
+	 @POST 
+		@Path("/removeproductfromwishlist/{productid}/{customerid}")
+		@Consumes(MediaType.MULTIPART_FORM_DATA)
+		public Response removeproductfromwishlist(
+				@PathParam("productid") int productid,
+				@PathParam("customerid") int customerid){
+		 
+		 	Product prod = ProductDAO.getProductsbyId(productid).get(0);
+		 
+			
+		 	Customer cust = CustomerDAO.getcustomerbyid(customerid);
+		 	
+		    
+		 	int resp = CustomerDAO.removeprodfromcustomerwishlist (cust,productid);
+			 if(resp >0)
+			 {
+				 String result = resp+"";
+				 return Response.status(201).entity(result).build();
+			 }
+			 else
+			 {
+				 String result = resp+"";
+				 return Response.status(404).entity(result).build();
+			 }
+			
+		}
+	 
 	 
 	 
 	 

@@ -141,6 +141,14 @@ public class UserController {
 		 
 	    }
 	
+	@Path("/getnoinusercart/{cusid}")
+	 @GET
+	 @Produces(MediaType.APPLICATION_JSON)
+	    public Response getproductsincart(@PathParam("cusid") int cusid) {
+		 GenericEntity<Customer> customer;
+		 int size  = CustomerDAO.getnoofproductsincart(cusid);
+		 return Response.ok(size).build();
+	    }
 	
 	@POST 
 	@Path("/saveSeller")
@@ -219,6 +227,16 @@ public class UserController {
 		int resp = UserDAO.emptyUserCart(uid);
 		return Response.ok(resp).build();			 
 	}
+	
+	@Path("/getUserWishlist/{userid}")
+	 @GET
+	 @Produces(MediaType.APPLICATION_JSON)
+	    public Response getuserwishlist(@PathParam("userid") int userid) {
+
+		List<Product> lklist = UserDAO.getUserWishlist(userid);
+		return Response.ok(lklist).build();
+			
+	    }
 	
 	@GET
 	@Path("/removeCartItem/{uid}/{prodid}")

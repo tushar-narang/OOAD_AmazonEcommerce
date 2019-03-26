@@ -37,7 +37,7 @@
 <!-- custom javascript -->
 <script src="js/ajax/viewProduct.js" type="text/javascript" defer></script>
 <script src="js/scripts/cartManagement.js" type="text/javascript" defer></script>
-
+<script src="js/scripts/wishManagement.js" type="text/javascript" defer></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	viewProduct();
@@ -88,7 +88,14 @@ function addcheckoutitems() {
 	}
 		
 }
-
+function addwishlistitems() {		
+			var product_id = localStorage.getItem("viewingProduct");		
+			var udata = JSON.parse(localStorage.getItem("userdata"));		
+			console.log(udata);		
+			additemintowishlist(product_id,udata.id);		
+			console.log("wishlist method was called : manpreet");		
+	}
+	
 function addcartitems() {
 	var product_id = localStorage.getItem("viewingProduct");
 	var product_quantity = $('#product_qty').val();
@@ -324,9 +331,8 @@ function addcartitems() {
 	<hr>
 	<div id="product_hidden"></div>
 	<a href="#" class="btn  btn-warning"  onclick="addcheckoutitems();" > Buy now </a>
-	<a href="#" class="btn  btn-outline-warning" onclick="addcartitems();"> <i class="fas fa-shopping-cart"></i> Add to cart </a>
-	<a href="#" class="btn  btn-outline-warning" onclick="addwishlistitems();"> <i class="fas fa-shopping-cart"></i> Add to wishList </a><hr/>
-	
+	<a href="#" class="btn  btn-outline-warning" onclick="addcartitems();"> <i class="fas fa-shopping-cart"></i> Add to cart </a><hr/>
+<a href="#" class="btn  btn-warning"  onclick="addwishlistitems();" > Add to Wishlist </a>	
 	<a href="leave_review.html" class="btn  btn-success" id="feedbackButton">  Leave Feedback </a>
 
 <!-- short-info-wrap .// -->

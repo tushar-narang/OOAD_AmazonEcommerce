@@ -58,6 +58,11 @@ public class UserDAO {
 						Hibernate.initialize(item.getProduct().getProduct_reviews());
 						Hibernate.initialize(item.getProduct().getLabels());
 					}
+					for(Product item:c.getWishlist()) {
+						Hibernate.initialize(item.getProduct_images());
+						Hibernate.initialize(item.getProduct_reviews());
+						Hibernate.initialize(item.getLabels());
+					}
 					
 					for(Order o: c.getOrderlist()) {
 						Hibernate.initialize(o.getOrdereditemlist());
@@ -171,6 +176,18 @@ public static String addsellerdetails(Seller seller, String cardno, String cvv) 
 		Hibernate.initialize(user.getCartlist());
 	
 		return user.getCartlist();
+		
+	}
+	
+	public static List<Product> getUserWishlist(int userid) {
+		Session ses = CommonSessionFactory.sf.openSession();
+		ses.beginTransaction();
+		
+		Customer user = (Customer)ses.load(Customer.class, userid);
+		System.out.println("&&&&&&&&&" + user.toString());
+		Hibernate.initialize(user.getCartlist());
+	
+		return user.getWishlist();
 		
 	}
 	

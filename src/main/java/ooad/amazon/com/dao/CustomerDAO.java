@@ -57,13 +57,23 @@ public class CustomerDAO {
 			return null;
 	} 
 	
-	
+	public static int getnoofproductsincart (int cusid) {
+		Session ses = CommonSessionFactory.sf.openSession();
+		ses.beginTransaction();
+		Customer user = (Customer)ses.load(Customer.class, cusid);
+		Hibernate.initialize(user.getCartlist());
+		int size = user.getCartlist().size();
+		ses.getTransaction().commit();
+		ses.close();
+		return size;
+	} 
 	
 public static Customer getcustomerbyid (int customerid) {
 	Session ses = CommonSessionFactory.sf.openSession();
 	ses.beginTransaction();
 	Customer customer = (Customer)ses.load(Customer.class, customerid);
 	Hibernate.initialize(customer.getCartlist());
+	Hibernate.initialize(customer.getWishlist());
 	ses.getTransaction().commit();
 	ses.close();
 	return customer;
@@ -107,7 +117,71 @@ public static int addprodtocustomercart (Customer cust, CartItem cartitem ) {
 
 
 
+public static int addprodtocustomerwishlist (Customer cust, Product prod1 ) {
+	Session ses = CommonSessionFactory.sf.openSession();
+	
+	ses.beginTransaction();
+	System.out.println("wassssuppppp kklklkl ");
+	
+	List<Product> wishitemlist =cust.getWishlist();
+ 	wishitemlist.add(prod1);
+ 	
+    cust.setWishlist(wishitemlist);
+	ses.update(cust);
+	ses.getTransaction().commit();
+	ses.close();
+	return 1;
+}
 
+
+
+public static int removeprodfromcustomercart (Customer cust, int prodid ) {
+	Session ses = CommonSessionFactory.sf.openSession();
+	
+	ses.beginTransaction();
+	
+	
+	List<CartItem> cartitemlist =cust.getCartlist();
+	CartItem kl2 = new CartItem(); 
+	
+	for (CartItem kl : cartitemlist) {
+		if(kl.getProduct().getId() == prodid) {
+			kl2 = kl;
+			break;
+		}
+	}
+	
+    cartitemlist.remove(kl2);
+    cust.setCartlist(cartitemlist);
+	ses.update(cust);
+	ses.getTransaction().commit();
+	ses.close();
+	return 1;
+}
+
+public static int removeprodfromcustomerwishlist (Customer cust, int prodid ) {
+	Session ses = CommonSessionFactory.sf.openSession();
+	
+	ses.beginTransaction();
+	
+	
+	List<Product> wishitemlist =cust.getWishlist();
+	Product kl2 = new Product();
+	
+	for (Product kl : wishitemlist) {
+		if(kl.getId() == prodid) {
+			kl2 = kl;
+			break;
+		}
+	}
+	
+	wishitemlist.remove(kl2);
+    cust.setWishlist(wishitemlist);
+	ses.update(cust);
+	ses.getTransaction().commit();
+	ses.close();
+	return 1;
+}
 
 	/*public static void main(String[] args) {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();

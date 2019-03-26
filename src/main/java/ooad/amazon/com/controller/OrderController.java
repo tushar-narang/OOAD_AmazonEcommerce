@@ -50,10 +50,10 @@ public class OrderController {
 // 		List<Integer> quants = new ArrayList<>();
 // 		quants.add(quantity);
  		String op = OrderDAO.saveOrder(custid, prodid, quantity, freequantity, cardno, addr, cvv);
- 		if(op.equals("Insufficient Balance"))
- 			return Response.status(404).entity(op).build();
- 		else
+ 		if(op.equals("Success"))
  			return Response.status(201).entity(op).build();
+ 		else
+ 			return Response.status(404).entity(op).build();
 		
 	}
 	 	
